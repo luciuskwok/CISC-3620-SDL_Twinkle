@@ -69,6 +69,23 @@ void draw_rect(int center_x, int center_y, int w, int h, uint32_t color) {
 	}
 }
 
+void draw_dot_grid() {
+	unsigned char r, g, b;
+	b = 0x80;
+	uint32_t color;
+	int c = frame_index;
+
+	for (int x = 7; x < pixels_w; x += 16) {
+		for (int y = 7; y < pixels_h; y += 16) {
+			r = ((pixels_w - x + c) * 255 / pixels_w) % 128 + 127;
+			g = ((pixels_h - y + c /5) * 255 / pixels_h) % 128 + 127;
+			b = (x * 512 / pixels_h + c / 7) % 128 + 127;
+			color = (r << 24) | (g << 16) | (b << 8) | 0x000000FF;
+			set_pixel(x, y, color);
+		}
+	}
+}
+
 bool initialize_windowing_system() {
 
 	// Set up SDL
@@ -181,6 +198,8 @@ void run_render_pipeline() {
 	draw_rect(pixels_w * 11 / 16, pixels_h * 3 / 16, pixels_w * 7 / 16, pixels_h * 5 / 16, 0x005ff3ff);
 	draw_rect(pixels_w * 9 / 16, pixels_h * 13 / 16, pixels_w * 7 / 16, pixels_h * 5 / 16, 0x99e550ff); // green lower
 
+	// Draw dot grid
+	draw_dot_grid();
 
 	// Render frame buffer
 	SDL_UpdateTexture(texture, NULL, pixels, pixels_w * sizeof(uint32_t));
