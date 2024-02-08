@@ -18,8 +18,6 @@ bool is_running;
 // Global state for rendering
 uint32_t frame_index;
 
-
-
 // Functions
 
 void clear(uint32_t color) {
@@ -165,12 +163,24 @@ void update_state() {
 }
 
 void run_render_pipeline() {
+	// Clear frame buffer
 	clear(0x000000FF);
 
+	// Draw 3 rects behind grid
+	draw_rect(pixels_w / 2, pixels_h * 7 / 16, pixels_w * 3 / 4, pixels_h / 16, 0x5fcde4ff);
+	draw_rect(pixels_w * 5 / 16, pixels_h * 7 / 16, pixels_w * 1 / 8, pixels_h * 17 / 32, 0x5b6ee1ff);
+	draw_rect(pixels_w * 8 / 16, pixels_h * 11 / 16, pixels_w * 15 / 16, pixels_h * 7 / 32, 0x1a5e42ff); // green lower
+
+	// Draw grid
 	int grid_spacing = 32;
-	int grid_x = pixels_w / 2 + frame_index % 32;
-	int grid_y = pixels_w / 2 + (frame_index / 16) % 32;
+	int grid_x = pixels_w / 2 + (frame_index / 2) % 32;
+	int grid_y = pixels_w / 2 + (frame_index / 1) % 32;
 	draw_grid(grid_x, grid_y, grid_spacing, 0x808080FF);
+
+	// Draw 2 rects in front of grid
+	draw_rect(pixels_w * 11 / 16, pixels_h * 3 / 16, pixels_w * 7 / 16, pixels_h * 5 / 16, 0x005ff3ff);
+	draw_rect(pixels_w * 9 / 16, pixels_h * 13 / 16, pixels_w * 7 / 16, pixels_h * 5 / 16, 0x99e550ff); // green lower
+
 
 	// Render frame buffer
 	SDL_UpdateTexture(texture, NULL, pixels, pixels_w * sizeof(uint32_t));
